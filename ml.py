@@ -102,7 +102,8 @@ def createTables(_conn):
                 d2f_imbd_id VARCHAR(20) NOT NULL,
                 d2f_rdate VARCHAR(20) NOT NULL,
                 d2f_title VARCHAR(100) NOT NULL,
-                d2f_genres VARCHAR(100))
+                d2f_genres VARCHAR(100),
+                d2f_runtime INTEGER)
                 """
         _conn.execute(lines)
        
@@ -113,7 +114,9 @@ def createTables(_conn):
                 md_imbd_id VARCHAR(20) NOT NULL,
                 md_rdate VARCHAR(20) NOT NULL,
                 md_title VARCHAR(100) NOT NULL,
-                md_genres VARCHAR(100))
+                md_genres VARCHAR(100),
+                md_director VARCHAR(100),
+                md_runtime INTEGER)
                 """
         _conn.execute(lines)
 
@@ -127,18 +130,18 @@ def createTables(_conn):
 
 def addData(_conn):
     print("++++++++++++++++++++++++++++++++++")
-    print("Adding movielist.csv")
     
     _conn.execute("BEGIN")
     try:
+        print("Adding movielist.csv")
         f = open("database2/movie_list_1.csv")
         lines = csv.reader(f)
-        sql = "INSERT INTO data1 (d1_id, d1_imbd_id, d1_ryear, d1_title, d1_genres_new, d1_cast_new, d1_director) VALUES(?,?, ?, ?, ?, ?, ?)"
+        sql = "INSERT INTO data1 (d1_id, d1_imbd_id, d1_title, d1_ryear, d1_genres_new, d1_cast_new, d1_director) VALUES(?,?, ?, ?, ?, ?, ?)"
 
         _conn.executemany(sql,lines)
         f.close()
 
-
+        print("Adding movielist2.csv")
         f = open("database1/movies_metadata.csv")
         lines = csv.reader(f)
         sql = """INSERT INTO data2 (
@@ -176,7 +179,7 @@ def filterData(_conn):
     try:
 
         sql = """
-            INSERT INTO data2_filtered SELECT data2.d2_id, data2.d2_imbd_id, data2.d2_rdate, data2.d2_title, data2.d2_genres FROM data2
+            INSERT INTO data2_filtered SELECT data2.d2_id, data2.d2_imbd_id, data2.d2_rdate, data2.d2_title, data2.d2_genres, data2.d2_runtime FROM data2
             """
         
         _conn.execute(sql)
@@ -201,7 +204,10 @@ def mergeData(_conn,):
     try:
 
         sql = """
-            INSERT INTO merged_data SELECT data2_filtered.d2f_id, data1.d1_id, data2_filtered.d2f_imbd_id, data2_filtered.d2f_rdate, data2_filtered.d2f_title, data2_filtered.d2f_genres FROM data2_filtered,data1
+            INSERT INTO merged_data SELECT 
+            data2_filtered.d2f_id, data1.d1_id, data2_filtered.d2f_imbd_id, data1.d1_ryear, 
+            data2_filtered.d2f_title, data1.d1_genres_new, data1.d1_director, data2_filtered.d2f_runtime 
+            FROM data2_filtered,data1
             WHERE data2_filtered.d2f_imbd_id = data1.d1_imbd_id
             """
         _conn.execute(sql)

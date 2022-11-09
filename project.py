@@ -149,10 +149,60 @@ def createtest(_conn):
         sql = "INSERT INTO genre VALUES(?, ?)"
         _conn.executemany(sql, values)
 
+        values = [
+            (1,'John Lasseter'),
+            (2,'Allison Anders'),
+            (3,'Joe Johnston'),
+            (4,'James Fargo'),
+            (5,'Alexandre Rockwell'),
+            (6,'Joel Coen'),
+            (7,'Joe Chappelle'),
+            (8,'Kevin Yagher'),
+            (9,'Rick Friedberg'),
+            (10,'Tom Holland'),
+            (11,'Woody Allen'),
+            (12,'Oliver Stone'),
+            (13,'Tom Shadyac'),
+            (14,'Wayne Wang'),
+            (15,'David Weaver'),
+            (16,'Christopher Smith'),
+            (17,'Pantelis Voulgaris'),
+            (18,'Frank Coraci'),
+            (19,'Robert Rodriguez'),
+            (20, 'Quentin Tarantino')
+        ]
 
 
+        sql = "INSERT INTO director VALUES(?, ?)"
+        _conn.executemany(sql, values)
 
 
+        values = [
+            (1,'1995'),
+            (2,'1996'),
+            (3,'1997'),
+            (4,'1998'),
+            (5,'1999'),
+            (6,'2000'),
+            (7,'2001'),
+            (8,'2002'),
+            (9,'2003'),
+            (10,'2004'),
+            (11,'2005'),
+            (12,'2006'),
+            (13,'2007'),
+            (14,'2008'),
+            (15,'2009'),
+            (16,'2010'),
+            (17,'2011'),
+            (18,'2012'),
+            (18,'2013'),
+
+
+        ]
+
+        sql = "INSERT INTO date VALUES(?, ?)"
+        _conn.executemany(sql, values)
 
 
 
