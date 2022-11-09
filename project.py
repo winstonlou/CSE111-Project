@@ -112,7 +112,16 @@ def createtest(_conn):
             (6," ", 'The Big Lebowski'),
             (7," ", 'Phantoms'),
             (8," ", 'Hellraiser:Bloodline'),
-            (9," ", ''),
+            (9," ",'Spy Hard'),
+            (10," ",'Thinner'),
+            (11," ",'Sleeper'),
+            (12," ",'The Doors'),
+            (13," ",'Liar Liar'),
+            (14," ",'Chinese Box'),
+            (15," ",'Siblings'),
+            (16," ",'Creep'),
+            (17," ",'Brides'),
+            (18," ",'Click'),
         ]
 
 
@@ -131,6 +140,9 @@ def createtest(_conn):
             (9,'Action'),
             (10,'Horror')
             (11,'Science Fiction'),
+            (12,'Biography'),
+            (13,'Mystery'),
+            (14,'History'),
         ]
 
 
