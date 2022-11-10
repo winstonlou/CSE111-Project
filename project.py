@@ -84,12 +84,7 @@ def createTables(_conn):
                     u_mid decimal (9,0) NOT NULL,
                     u_watching Integer NOT NULL,
                     u_watched Integer NOT NULL,
-                    u_towatch Integer NOT NULL,
-                    m_title varchar(100) NOT NULL,
-                    g_gname char (25) NOT NULL,
-                    di_diname varchar (50) NOT NULL,
-                    du_runtime Integer NOT NULL,
-                    da_releaseyear Integer NOT NULL)"""
+                    u_towatch Integer NOT NULL)"""
         _conn.execute(sql)
 
         _conn.execute("COMMIT")
@@ -356,6 +351,28 @@ def createtest(_conn):
         sql = "INSERT INTO movie_director VALUES(?, ?)"
         _conn.executemany(sql, values)
 
+        values = [
+            (1, 1, 0, 1, 0),
+            (2, 2, 0, 0, 1),
+            (3, 3, 0, 0, 1),
+            (4, 4, 1, 0, 0),       #u_watching, u_watched, u_towatch 
+            (5, 5, 1, 0, 0),
+            (6, 6, 0, 0, 1),
+            (7, 7, 1, 0, 0),
+            (8, 8, 0, 1, 0),
+            (9, 9, 0, 1, 0),
+            (10, 10, 1, 0, 0),
+            (11, 11, 0, 0, 1),
+            (12, 12, 0, 1, 0),
+            (13, 13, 0, 1, 0),
+            (14, 15, 2, 10, 15),
+            (15, 17, 0, 0, 1),
+            (16, 18, 0, 0, 1),
+        ]
+
+        sql = "INSERT INTO user VALUES(?,?,?,?,?)"
+        _conn.executemany(sql, values)
+
         _conn.execute("COMMIT")
         print("successfully inputed test values")
     except Error as e:
@@ -496,9 +513,219 @@ def Queries1(_conn):
     except Error as e:
         print(e)
 
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 6: Search movie based on User's Input for movie title and 2 genre input")
+
+    try:
+        userInput = "C"       #Can be other string inputs
+        userInput2 = "Romance"
+        userInput3 = "Drama"
+
+        cur.execute("""SELECT m_title, g_gname FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND instr(m_title, ?) AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        """, [userInput, userInput2, userInput3])
+        
+        rows = cur.fetchall()  
+        results = "{:<10} {:>10}\n".format("movieTitle", "Genre")
+        for row in rows:
+            results += "{:<15} {:<10}\n".format(row[0],userInput2,userInput3)
+        print(results)
+
+
+        f = open("output/5.out", "w")
+        f.write(results)
+        f.close()
+    
+    except Error as e:
+        print(e)
+
 def Queries2(_conn):
     print("++++++++++++++++++++++++++++++++++")
-    print("Query 6: Query a movie: title,rating, date, genre duration, director")
+    print("Query 6: Query a movie based on user input of title and 2 genres")
+    cur=_conn.cursor()
+
+    try:
+       
+        userInput = "S"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear, genre.g_gname, di FROM movies
+        INNER JOIN rated ON movies.m_raid = rated.ra_raid
+        INNER JOIN duration ON movies.m_duid = duration.du_duid
+        INNER JOIN dates ON movies.m_daid = dates.da_daid
+        WHERE instr(m_title, ?) """,[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20} {:>20}\n".format("movieId", "movieTitle", "movieRatings", "movieDuration", "MovieReleaseDate")
+        for row in rows:
+            results += "{:<20} {:<20} {:<15} {:<15} {:<15}\n".format(row[0], row[1], row[2], row[3], row[4])
+        print(results)
+        
+        f = open("output/6.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 7: Query a movie based on user input of title and 3 genres ")
+    cur=_conn.cursor()
+
+    try:
+       
+        
+        cur.execute("""SELECT movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear, genre.g_gname, di FROM movies
+        INNER JOIN rated ON movies.m_raid = rated.ra_raid
+        INNER JOIN duration ON movies.m_duid = duration.du_duid
+        INNER JOIN dates ON movies.m_daid = dates.da_daid
+        WHERE instr(m_title, ?) """,[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20} {:>20}\n".format("movieId", "movieTitle", "movieRatings", "movieDuration", "MovieReleaseDate")
+        for row in rows:
+            results += "{:<20} {:<20} {:<15} {:<15} {:<15}\n".format(row[0], row[1], row[2], row[3], row[4])
+        print(results)
+        
+        f = open("output/7.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+    
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 8: Query a movie's genre that has 1 genres")
+    cur=_conn.cursor()
+
+    try:
+       
+        userInput = "Siblings"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, genre.g_gname FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND movies.m_title = ?
+        LIMIT 1""",[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20}\n".format("movieTitle", "Genre")
+        for row in rows:
+            results += "{:<20} {:<20}\n".format(row[0], row[1])
+        print(results)
+        
+        f = open("output/8.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 9: Query a movie's genre that has 2 genres")
+    cur=_conn.cursor()
+
+    try:
+       
+        userInput = "Four Rooms"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, genre1.g_gname, genre2.g_gname FROM movies, movie_genre AS movie_genre1, movie_genre AS movie_genre2, genre AS genre1, genre AS genre2
+        WHERE movies.m_mid = movie_genre1.mg_mid AND movies.m_mid = movie_genre2.mg_mid AND
+        genre1.g_gid = movie_genre1.mg_gid AND genre2.g_gid = movie_genre2.mg_gid AND 
+        movies.m_title = ? AND genre1.g_gname IS NOT genre2.g_gname 
+        LIMIT 1""",[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} \n".format("movieTitle", "Genre", "Genre2")
+        for row in rows:
+            results += "{:<20} {:<20} {:>10} \n".format(row[0], row[1], row[2])
+        print(results)
+        
+        f = open("output/9.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 10: Query a movie's genre that has 3 genres")
+    cur=_conn.cursor()
+
+    try:
+       
+        userInput = "Toy Story"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, genre1.g_gname, genre2.g_gname, genre3.g_gname FROM movies, movie_genre AS movie_genre1, movie_genre AS movie_genre2, movie_genre AS movie_genre3, genre AS genre1, genre AS genre2, genre AS genre3
+        WHERE movies.m_mid = movie_genre1.mg_mid AND movies.m_mid = movie_genre2.mg_mid AND movies.m_mid = movie_genre3.mg_mid AND
+        genre1.g_gid = movie_genre1.mg_gid AND genre2.g_gid = movie_genre2.mg_gid AND genre3.g_gid = movie_genre3.mg_gid AND 
+        movies.m_title = ? AND genre1.g_gname IS NOT genre2.g_gname AND genre1.g_gname IS NOT genre3.g_gname AND genre3.g_gname IS NOT genre2.g_gname
+        LIMIT 1""",[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20}\n".format("movieTitle", "Genre", "Genre2", "Genre3")
+        for row in rows:
+            results += "{:<20} {:<20} {:>10} {:>20} \n".format(row[0], row[1], row[2], row[3])
+        print(results)
+        
+        f = open("output/10.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+
+def Queries3(_conn):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 6: Query a movie based on user input of title and 2 genres")
+    cur=_conn.cursor()
+
+    try:
+       
+        userInput = "S"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear, genre.g_gname, di FROM movies
+        INNER JOIN rated ON movies.m_raid = rated.ra_raid
+        INNER JOIN duration ON movies.m_duid = duration.du_duid
+        INNER JOIN dates ON movies.m_daid = dates.da_daid
+        WHERE instr(m_title, ?) """,[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20} {:>20}\n".format("movieId", "movieTitle", "movieRatings", "movieDuration", "MovieReleaseDate")
+        for row in rows:
+            results += "{:<20} {:<20} {:<15} {:<15} {:<15}\n".format(row[0], row[1], row[2], row[3], row[4])
+        print(results)
+        
+        f = open("output/6.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 7: Query a movie based on user input of title and 3 genres")
+    cur=_conn.cursor()
+
+    try:
+       
+        
+        cur.execute("""SELECT movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear, genre.g_gname, di FROM movies
+        INNER JOIN rated ON movies.m_raid = rated.ra_raid
+        INNER JOIN duration ON movies.m_duid = duration.du_duid
+        INNER JOIN dates ON movies.m_daid = dates.da_daid
+        WHERE instr(m_title, ?) """,[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20} {:>20}\n".format("movieId", "movieTitle", "movieRatings", "movieDuration", "MovieReleaseDate")
+        for row in rows:
+            results += "{:<20} {:<20} {:<15} {:<15} {:<15}\n".format(row[0], row[1], row[2], row[3], row[4])
+        print(results)
+        
+        f = open("output/1.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+    
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 8: Query a movie's genre that has 1 genres")
     cur=_conn.cursor()
 
     try:
@@ -523,8 +750,57 @@ def Queries2(_conn):
     except Error as e:
         print(e)
 
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 9: Query a movie's genre that has 3 genres")
+    cur=_conn.cursor()
 
+    try:
+       
+        userInput = "Toy Story"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, genre1.g_gname, genre2.g_gname, genre3.g_gname FROM movies, movie_genre AS movie_genre1, movie_genre AS movie_genre2, movie_genre AS movie_genre3, genre AS genre1, genre AS genre2, genre AS genre3
+        WHERE movies.m_mid = movie_genre1.mg_mid AND movies.m_mid = movie_genre2.mg_mid AND movies.m_mid = movie_genre3.mg_mid AND
+        genre1.g_gid = movie_genre1.mg_gid AND genre2.g_gid = movie_genre2.mg_gid AND genre3.g_gid = movie_genre3.mg_gid AND 
+        movies.m_title = ? AND genre1.g_gname IS NOT genre2.g_gname AND genre1.g_gname IS NOT genre3.g_gname AND genre3.g_gname IS NOT genre2.g_gname
+        LIMIT 1""",[userInput])
 
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20}\n".format("movieTitle", "Genre", "Genre2", "Genre3")
+        for row in rows:
+            results += "{:<20} {:<20} {:>10} {:>20} \n".format(row[0], row[1], row[2], row[3])
+        print(results)
+        
+        f = open("output/1.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
+
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 10: Query a movie: title,rating, date, genre duration, director")
+    cur=_conn.cursor()
+
+    try:
+       
+        userInput = "S"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear, genre.g_gname, di FROM movies
+        INNER JOIN rated ON movies.m_raid = rated.ra_raid
+        INNER JOIN duration ON movies.m_duid = duration.du_duid
+        INNER JOIN dates ON movies.m_daid = dates.da_daid
+        WHERE instr(m_title, ?) """,[userInput])
+
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20} {:>20}\n".format("movieId", "movieTitle", "movieRatings", "movieDuration", "MovieReleaseDate")
+        for row in rows:
+            results += "{:<20} {:<20} {:<15} {:<15} {:<15}\n".format(row[0], row[1], row[2], row[3], row[4])
+        print(results)
+        
+        f = open("output/1.out", "w")
+        f.write(results)
+        f.close()
+  
+    except Error as e:
+        print(e)
 
 def main():
     database = r"test.sqlite"
@@ -532,11 +808,12 @@ def main():
     # create a database connection
     conn = openConnection(database)
     with conn:
-        dropTable(conn)
-        createTables(conn)
-        createtest(conn)
+        #dropTable(conn)
+        #createTables(conn)
+        #createtest(conn)
         Queries1(conn)
         Queries2(conn)
+        #Queries3(conn)
 
 
         
