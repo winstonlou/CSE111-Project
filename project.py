@@ -364,58 +364,110 @@ def createtest(_conn):
 
 def Queries1(_conn):
     print("++++++++++++++++++++++++++++++++++")
-    print("Query 1")
+    print("Query 1: Search Movie based on User's Input for movie title ")
     cur=_conn.cursor()
 
 
     try:
-        cur.execute("SELECT m_mid FROM movies")
-        mkeys=cur.fetchall()
-        for mid in mkeys:
+       
+        userInput = "S"       #Can be other string inputs
+        cur.execute("""SELECT movies.m_mid,movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear FROM movies
+        INNER JOIN rated ON movies.m_raid = rated.ra_raid
+        INNER JOIN duration ON movies.m_duid = duration.du_duid
+        INNER JOIN dates ON movies.m_daid = dates.da_daid
+        WHERE instr(m_title, ?) """,[userInput])
 
-            sql = (f"""SELECT movies.m_mid,movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear FROM movies
-            INNER JOIN rated ON movies.m_raid = rated.ra_raid
-            INNER JOIN duration ON movies.m_duid = duration.du_duid
-            INNER JOIN dates ON movies.m_daid = dates.da_daid
-            WHERE movies.m_mid = {mid[0]} """)
-
-            cur.execute(sql)
-            results=cur.fetchall()  
-            print(results) 
+        rows = cur.fetchall()  
+        results = "{:>0} {:>20} {:>20} {:>20} {:>20}\n".format("movieId", "movieTitle", "movieRatings", "movieDuration", "MovieReleaseDate")
+        for row in rows:
+            results += "{:<20} {:<0} {:>13} {:>13} {:>15}\n".format(row[0], row[1], row[2], row[3], row[4])
+        print(results)
+        
+        f = open("output/1.out", "w")
+        f.write(results)
+        f.close()
+  
     except Error as e:
         print(e)
 
-
     print("++++++++++++++++++++++++++++++++++")
-    print("Query 2")
+    print("Query 2: Search movie based on User's Input for movie genre")
 
     try:
-        cur.execute("SELECT m_mid FROM movies")
-        mkeys=cur.fetchall()
-        cur.execute("SELECT m_title FROM movies")
-        mtitles = cur.fetchall()
-        count = 0
-        for mid in mkeys:
-            print(mtitles[count], end= "")
-            print(":", end = "")
-            sql = (f"""SELECT g_gname FROM movies, movie_genre, genre
-            WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND movies.m_mid = {mid[0]}""")
 
-            cur.execute(sql)
-            results=cur.fetchall()  
-            print(results)
-            count +=1
+        userInput = 'Comedy'      #can be any user input for genre search via check box
+    
+        cur.execute("""SELECT m_title, g_gname FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND
+        genre.g_gname = ? ORDER BY m_title""", [userInput])
 
-        #get the movie from the list based on a specific genre
-        userInput = "Action"  #or whatever the user inputs
-        #search through the list and get the movies where it has the the user input genre
+        rows = cur.fetchall()  
+        results = "{:<0} {:>23}\n".format("movieTitle", "Genre")
+        for row in rows:
+            results += "{:<20} {:>10} \n".format(row[0], row[1])
+        print(results)
         
-
-        print()
+        f = open("output/2.out", "w")
+        f.write(results)
+        f.close()
     except Error as e:
         print(e)
 
     print("++++++++++++++++++++++++++++++++++")
+    print("Query 3: Search movie based on User's Input for 2 movie genres")
+
+    try:
+
+        userInput = 'Drama'      #can be any user input for genre search check box
+        userInput2 = 'Thriller'
+
+        cur.execute("""SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?""", [userInput, userInput2])
+
+        rows = cur.fetchall()  
+        results = "{:<0}\n".format("movieTitle")
+        for row in rows:
+            results += "{:<0}\n".format(row[0])
+        print(results)
+        
+        f = open("output/3.out", "w")
+        f.write(results)
+        f.close()
+    except Error as e:
+        print(e)
+
+    print("++++++++++++++++++++++++++++++++++")
+    print("Query 4: Search movie based on User's Input for 3 movie genres")
+
+    try:
+
+        userInput = 'Drama'      #can be any user input for genre search check box
+        userInput2 = 'Thriller'
+        userInput3 = ''
+        
+        cur.execute("""SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?""", [userInput, userInput2])
+
+        rows = cur.fetchall()  
+        results = "{:<0}\n".format("movieTitle")
+        for row in rows:
+            results += "{:<0}\n".format(row[0])
+        print(results)
+        
+        f = open("output/3.out", "w")
+        f.write(results)
+        f.close()
+    except Error as e:
+        print(e)
+
+
+
 
 
 def main():
