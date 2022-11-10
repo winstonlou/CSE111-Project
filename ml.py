@@ -44,8 +44,6 @@ def dropTable(_conn):
         _conn.execute(sql)
         sql = "DROP TABLE merged_data"
         _conn.execute(sql)
-        sql = "DROP TABLE premerge"
-        _conn.execute(sql)
 
         _conn.execute("COMMIT")
         print("successfully deleted tables")
@@ -127,7 +125,6 @@ def createTables(_conn):
 
 
 
-
         _conn.execute("COMMIT")
         print("successfully created tables")
     except Error as e:
@@ -169,8 +166,6 @@ def addData(_conn):
 
         _conn.executemany(sql,lines)
         f.close()
-
-
 
 
         _conn.execute("COMMIT")
@@ -230,67 +225,6 @@ def mergeData(_conn,):
 
     print("++++++++++++++++++++++++++++++++++")
 
-def getRating(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Getting Rating")
-
-    #_conn.execute("BEGIN")
-    try:
-        sql = """CREATE TABLE link (
-                    l_id decimal (9,0),
-                    l_imbd_id INTEGER NOT NULL,
-                    l_tmbd_id INTEGER NOT NULL)
-                    """
-        _conn.execute(sql)
-
-        sql = """CREATE TABLE premerge (
-                    pm_d2id decimal (9,0),
-                    pm_rating decimal(5,1))
-                    """
-        _conn.execute(sql)
-
-
-        sql = """CREATE TABLE rating (
-                    r_uid decimal (9,0),
-                    r_movieid INTEGER NOT NULL,
-                    r_rating decimal(5,1) NOT NULL,
-                    r_timestamp INTEGER NOT NULL)
-                    """
-        _conn.execute(sql)
-        print("Adding movielist3.csv")
-        f = open("database1/links_small.csv")
-        lines = csv.reader(f)
-        sql = "INSERT INTO link(l_id,l_imbd_id,l_tmbd_id) VALUES(?, ?, ?)"
-        _conn.executemany(sql,lines)
-        f.close()
-
-
-        print("Adding movielist4.csv")
-        f = open("database1/ratings_small.csv")
-        lines = csv.reader(f)
-        sql = "INSERT INTO rating(r_uid,r_movieid,r_rating,r_timestamp) VALUES(?, ?, ?,?)"
-        _conn.executemany(sql,lines)
-        f.close()
-
-        sql ="""INSERT INTO premerge SELECT data2.d2_id, r_rating FROM rating,link,data2
-                WHERE link.l_tmbd_id = data2.d2_id2 AND link.l_id = rating.r_movieid"""
-        _conn.execute(sql)
-
-        sql = "DROP TABLE link"
-        _conn.execute(sql)
-        sql = "DROP TABLE rating"
-        _conn.execute(sql)
-
-
-
-        _conn.execute("COMMIT")
-        print("successfully created tables")
-    except Error as e:
-        _conn.execute("ROLLBACK")
-        print(e)
-
-
-    print("++++++++++++++++++++++++++++++++++")
 
 
 def main():
@@ -304,9 +238,6 @@ def main():
         addData(conn)
         filterData(conn)
         mergeData(conn)
-        getRating(conn)
-
-        
 
 
     closeConnection(conn, database)
