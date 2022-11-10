@@ -139,24 +139,24 @@ def createtest(_conn):
     try:
         
         values = [
-            (1, 2, 1, 1,'Toy Story'),
-            (2, 2, 1, 2 ,'Four Rooms'),
+           (1, 2, 1, 1, 'Toy Story'),
+            (2, 2, 1, 2, 'Four Rooms'),
             (3, 2, 1, 3, 'Jumanji'),
             (4, 2, 2, 2, 'Fargo'),
             (5, 2, 19, 5,  "Miller's Crossing"),
             (6, 2, 4, 6,  'The Big Lebowski'),
-            (7, " ", " ", " ",'Phantoms'),
-            (8, " ", " ", " ",  'Hellraiser:Bloodline'),
-            (9, " ", " ", " ", 'Spy Hard'),
-            (10, " ", " ", " ", 'Thinner'),
-            (11, " ", " ", " ", 'Sleeper'),
-            (12, " ", " ", " ", 'The Doors'),
-            (13, " ", " ", " ", 'Liar Liar'),
-            (14, " ", " ", " ",  'Chinese Box'),
-            (15, " ", " ", " ", 'Siblings'),
-            (16, " ", " ", " ", 'Creep'),
-            (17, " ", " ", " ", 'Brides'),
-            (18, " ", " ", " ",  'Click'),
+            (7, 2, 4, 7, 'Phantoms'),
+            (8, 2, 2, 8,  'Hellraiser:Bloodline'),
+            (9, 2, 2, 1, 'Spy Hard'),
+            (10, 2, 2, 10, 'Thinner'),
+            (11, 2, 2, 19, 'Sleeper'),
+            (12, 2, 20, 12, 'The Doors'),
+            (13, 2, 3, 8, 'Liar Liar'),
+            (14, 2, 3, 4,  'Chinese Box'),
+            (15, 2, 10, 16, 'Siblings'),
+            (16, 2, 24, 19, 'Creep'),
+            (17, 2, 10, 17, 'Brides'),
+            (18, 2, 12, 18,  'Click'),
         ]
 
         sql = "INSERT INTO movies VALUES(?,?,?,?,?)"
