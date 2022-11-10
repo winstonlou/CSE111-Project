@@ -173,12 +173,13 @@ def createtest(_conn):
             (8,'Thriller'),
             (9,'Action'),
             (10,'Romance'),
-            (11,'Science Fiction'),
             (11,'Sci-Fi'),
             (12,'Biography'),
             (13,'Mystery'),
             (14, 'History'),
-            (15,'Horror')
+            (15,'Horror'),
+            (16,'Music'),
+            (17,'Foreign')
             
         ]
 
@@ -445,19 +446,22 @@ def Queries1(_conn):
     try:
 
         userInput = 'Drama'      #can be any user input for genre search check box
-        userInput2 = 'Thriller'
-        userInput3 = ''
-        
+        userInput2 = 'Foreign'
+        userInput3 = 'Romance'
+        both = userInput + " and " + userInput2 + " and " + userInput3
         cur.execute("""SELECT m_title FROM movies, movie_genre, genre
         WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
         INTERSECT
         SELECT m_title FROM movies, movie_genre, genre
-        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?""", [userInput, userInput2])
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?""", [userInput, userInput2, userInput3])
 
         rows = cur.fetchall()  
-        results = "{:<0}\n".format("movieTitle")
+        results = "{:<10} {:>10}\n".format("movieTitle","Genre")
         for row in rows:
-            results += "{:<0}\n".format(row[0])
+            results += "{:<15} {:<10}\n".format(row[0], both)
         print(results)
         
         f = open("output/4.out", "w")
@@ -494,14 +498,13 @@ def Queries1(_conn):
 
 def Queries2(_conn):
     print("++++++++++++++++++++++++++++++++++")
-    print("Query 1: Search Movie based on User's Input for movie title ")
+    print("Query 6: Query a movie: title,rating, date, genre duration, director")
     cur=_conn.cursor()
-
 
     try:
        
         userInput = "S"       #Can be other string inputs
-        cur.execute("""SELECT movies.m_mid,movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear FROM movies
+        cur.execute("""SELECT movies.m_title, rated.ra_ratings, duration.du_runtime, dates.da_releaseyear, genre.g_gname, di FROM movies
         INNER JOIN rated ON movies.m_raid = rated.ra_raid
         INNER JOIN duration ON movies.m_duid = duration.du_duid
         INNER JOIN dates ON movies.m_daid = dates.da_daid
@@ -529,9 +532,9 @@ def main():
     # create a database connection
     conn = openConnection(database)
     with conn:
-        #dropTable(conn)
-        #createTables(conn)
-        #createtest(conn)
+        dropTable(conn)
+        createTables(conn)
+        createtest(conn)
         Queries1(conn)
         Queries2(conn)
 
