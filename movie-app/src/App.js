@@ -9,10 +9,10 @@ function App() {
                     <div class="title">
                         <h1>Movie Recommendation</h1>
                     </div>
-                    <li><a href="#watching-list">Current List</a></li>
-                    <li><a href="#watched-list">Past List</a></li>
-                    <li><a href="#to-watch-list">Future List</a></li>
-                    <li><a href='#filter'>Filter</a></li>
+                    <li><a href="www.google.com">Current List</a></li>
+                    <li><a href="www.google.com">Past List</a></li>
+                    <li><a href="www.google.com">Future List</a></li>
+                    <li><a href='www.google.com'>Filter</a></li>
                 </ul>
   
                 <div class="rightNav">
