@@ -1,0 +1,19 @@
+movieId           movieTitle         movieRatings        movieDuration     MovieReleaseDate
+5                    Miller's Crossing    FALSE           115             1990           
+12                   The Doors            FALSE           140             1991           
+1                    Toy Story            FALSE           81              1995           
+2                    Four Rooms           FALSE           98              1995           
+3                    Jumanji              FALSE           104             1995           
+4                    Fargo                FALSE           98              1996           
+8                    Hellraiser:Bloodline FALSE           86              1996           
+9                    Spy Hard             FALSE           81              1996           
+10                   Thinner              FALSE           92              1996           
+11                   Sleeper              FALSE           89              1996           
+13                   Liar Liar            FALSE           86              1997           
+14                   Chinese Box          FALSE           99              1997           
+6                    The Big Lebowski     FALSE           117             1998           
+7                    Phantoms             FALSE           91              1998           
+15                   Siblings             FALSE           85              2004           
+17                   Brides               FALSE           128             2004           
+18                   Click                FALSE           107             2006           
+16                   Creep                FALSE           85              2014           
