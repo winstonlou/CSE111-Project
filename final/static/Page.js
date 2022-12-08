@@ -152,6 +152,8 @@ function DisplayData(data){
 
 function DisplayData2(data){
   
+
+  
   var entry = ""
   entry += '<td>'
   entry += "<th>Movie Name</th>"
@@ -159,6 +161,7 @@ function DisplayData2(data){
   entry += "<th>Release Year</th>"
   entry += "<th>Duration(mins)</th>"
   entry += "<th>Genre</th>"
+  entry += "<th>Delete Movie</th>"
   entry += "</td>"
   data2 = []
   filter2 = []
@@ -212,13 +215,19 @@ function DisplayData2(data){
     entry +="<th>"+ small[2] + "<th>"
     entry +="<th>"+ small[3] + "<th>"
     entry +="<th>"+ small[4] + "<th>"
+    entry += "<th>" + "<button onclick=deleteMovie(this)>delete Movie</button>" + "</th>"
     entry += "</tr>"
   }
-  document.getElementById("display").innerHTML += entry;
+  document.getElementById("display").innerHTML = entry;
 }
 
 function DisplayData3(data){
   console.log("DisplayData3 starting")
+  display = document.getElementById("display2")
+  while (display.firstChild) {
+    display.removeChild(display.firstChild);
+  }
+
   var entry = ""
   data2 = []
   filter2 = []
@@ -399,6 +408,21 @@ async function addMovie(element){
   console.log("addMovie with" + name + " and row #" + num)
   const xhttp = new XMLHttpRequest();
     xhttp.open('POST', url + "addCurrentMovie/"+ name + "/" + num, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onload = function(){
+
+      alert(this.responseText)
+     
+    };
+    
+    xhttp.send(name,num);
+}
+
+async function deleteMovie(element){
+  var num = element.parentNode.parentNode.rowIndex
+  console.log("deleteMovie with and row #" + num)
+  const xhttp = new XMLHttpRequest();
+    xhttp.open('DELETE', url + "deleteCurrentMovie/"+ num, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.onload = function(){
 

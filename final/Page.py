@@ -367,6 +367,35 @@ def addCurrentMovie(name,row):
     else:
         return json.dumps({"Already in List":0})
 
+@app.route('/deleteCurrentMovie/<row>', methods = ["DELETE"])
+def deleteCurrentMovie(row):
+    
+    conn = openConnection()
+    cur = conn.cursor()
+    sql = f"""SELECT u_mid FROM user;"""
+    cur.execute(sql)
+    results = cur.fetchall()
+    print(results)
+    key = 1
+    row = int(row)
+    for result in results:
+        print(result)
+        print(key)
+        print(row)
+        if key == row:
+            print("got in!")
+            result = str(result)
+            result = result.strip("(").strip(")").strip(",").strip("'")
+            result = int(result)
+            print(result)
+            cur.execute(f"""DELETE FROM user WHERE u_mid = "{result}";""")
+            conn.execute("COMMIT")
+            break
+        key = key + 1
+    closeConnection(conn)
+    return json.dumps({"Movie Deleted!": 200})
+
+
 @app.route('/getList', methods = ["GET"])
 def getList():
     conn = openConnection()
@@ -395,7 +424,7 @@ def getList():
     #print(data)
     closeConnection(conn)
     return json.dumps(data)
-
+    
 @app.route('/getList2', methods = ["GET"])
 def getList2():
     conn = openConnection()
