@@ -39,20 +39,23 @@ body {
     font-size: 19px;
   }
   
-.search-form {
+  .search-input {
     margin-top: 15px;
     float: right;
     margin-right: 100px;
   }
-  
+
 input[type=text] {
     padding: 7px;
     border: none;
     font-size: 16px;
     font-family: sans-serif;
   }
-  
+
 button {
+    margin-top: 15px;
+    float: right;
+    margin: 15px -270px 0px 0px;
     float: right;
     background: orange;
     color: white;
@@ -63,7 +66,7 @@ button {
     font-family: sans-serif;
     border: none;
     font-size: 16px;
-  
+
 }
 
 .input{
@@ -72,10 +75,11 @@ button {
   
 table,tr,th{
     font-family: sans-serif;
+    font-size: 16px;
     
 }
 
 .display2{
-    margin-left: 150px;
-    border-spacing:150px;
+  font-family: sans-serif;
+  font-size: 16px;
 }

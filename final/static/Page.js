@@ -1,5 +1,6 @@
 const url = "http://127.0.0.1:5000/"
 
+
 async function filter() {
     
     fetch(url+"displayMovie", {
@@ -149,6 +150,128 @@ function DisplayData(data){
   document.getElementById("display").innerHTML = entry;
 }
 
+function DisplayData2(data){
+  
+  var entry = ""
+  entry += '<td>'
+  entry += "<th>Movie Name</th>"
+  entry += "<th>Adult(18+)</th>"
+  entry += "<th>Release Year</th>"
+  entry += "<th>Duration(mins)</th>"
+  entry += "<th>Genre</th>"
+  entry += "</td>"
+  data2 = []
+  filter2 = []
+  count = 0
+  len = data.length
+  console.log(len)
+  for(item in data){
+    small = data[item]
+    if(item > 0 && item != data-1){
+      small2 = data[item-1]
+      if(small[0]==small2[0]){
+        filter2.push(small2[4])
+        small2[4] = ""
+        console.log(filter2)
+      } else {
+        filter2.push(small2[4])
+        small2[4] = ""
+        small2[4] += filter2
+        filter2 =[]
+        console.log(small2)
+      }
+    }
+    if(item == data.length-1){
+      console.log("Final")
+      filter2.push(small[4])
+      small[4] =""
+      small[4] += filter2
+      filter2 = []
+      console.log(small)
+    }
+    console.log(item)
+
+  }
+  console.log(data)
+
+  for (item in data){
+    small = data[item]
+    if(small[4] == ""){
+
+    }else{
+      data2.push(small)
+    }
+  }
+  console.log(data2)
+
+  for (item in data2){
+    small = data2[item]
+    entry += "<tr>"
+    entry +="<th>"+ small[0] + "<th>"
+    entry +="<th>"+ small[1] + "<th>"
+    entry +="<th>"+ small[2] + "<th>"
+    entry +="<th>"+ small[3] + "<th>"
+    entry +="<th>"+ small[4] + "<th>"
+    entry += "</tr>"
+  }
+  document.getElementById("display").innerHTML += entry;
+}
+
+function DisplayData3(data){
+  console.log("DisplayData3 starting")
+  var entry = ""
+  data2 = []
+  filter2 = []
+  count = 0
+  len = data.length
+  console.log(len)
+  for(item in data){
+    small = data[item]
+    if(item > 0 && item != data-1){
+      small2 = data[item-1]
+      if(small[0]==small2[0]){
+        filter2.push(small2[1])
+        small2[1] = ""
+        console.log(filter2)
+      } else {
+        filter2.push(small2[1])
+        small2[1] = ""
+        small2[1] += filter2
+        filter2 =[]
+        console.log(small2)
+      }
+    }
+    if(item == data.length-1){
+      console.log("Final")
+      filter2.push(small[1])
+      small[1] =""
+      small[1] += filter2
+      filter2 = []
+      console.log(small)
+    }
+    console.log(item)
+
+  }
+  console.log(data)
+
+  for (item in data){
+    small = data[item]
+    if(small[1] == ""){
+
+    }else{
+      data2.push(small)
+    }
+  }
+  console.log(data2)
+
+  for (item in data2){
+    document.getElementById("display2").innerHTML += "<br>"
+    document.getElementById("display2").innerHTML += data2[item]
+    
+    
+  }
+  
+}
 
 async function nameSearch(){
   var name = document.getElementById("movie-name").value
@@ -279,10 +402,42 @@ async function addMovie(element){
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.onload = function(){
 
-      data = JSON.parse(this.responseText)
-      console.log(data)
+      alert(this.responseText)
      
     };
     
     xhttp.send(name,num);
+}
+
+async function DisplayList(){
+  
+  const xhttp = new XMLHttpRequest();
+  xhttp.open('GET', url + "getList", true);
+  xhttp.setRequestHeader("Content-Type", "application/json");
+  xhttp.onload = function(){
+
+    data = JSON.parse(this.responseText)
+    console.log(data)
+    DisplayData2(data)
+  };
+  xhttp.send();
+
+  DisplayList2()
+
+}
+
+async function DisplayList2(){
+  console.log("dispalylist2 triggered")
+  const xhttp = new XMLHttpRequest();
+  xhttp.open('GET', url + "getList2", true);
+  xhttp.setRequestHeader("Content-Type", "application/json");
+  xhttp.onload = function(){
+
+    data = JSON.parse(this.responseText)
+    console.log(data)
+    DisplayData3(data)
+  };
+  xhttp.send();
+
+
 }

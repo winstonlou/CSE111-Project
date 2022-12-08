@@ -106,13 +106,15 @@ def CheckList(name,row):
             check = cur.fetchall()
             print(check)
             if check:
+                print("movie already in list")
                 return 1
             if not check:
+                print("movie not in list")
                 return 0
             break
         key = key + 1
     closeConnection(conn)
-    return 2
+    
 
 
 @app.route('/')
@@ -120,6 +122,25 @@ def index():
     #conn = openConnection()
     #closeConnection(conn)
     return render_template('Page.html')
+
+@app.route('/CurrentListView')
+def loadCurrentList():
+    #conn = openConnection()
+    #closeConnection(conn)
+    return render_template('Current.html')
+
+@app.route('/FutureListView')
+def loadFutureList():
+    #conn = openConnection()
+    #closeConnection(conn)
+    return render_template('Future.html')
+
+@app.route('/PastListView')
+def loadPastList():
+    #conn = openConnection()
+    #closeConnection(conn)
+    return render_template('Past.html')
+
 
 @app.route('/displayMovie', methods = ["GET"])
 def getMovieList():
@@ -326,13 +347,13 @@ def addCurrentMovie(name,row):
         sql = f"""SELECT m_mid FROM movies WHERE m_title LIKE '%{name}%';"""
         cur.execute(sql)
         results = cur.fetchall()
-        print(results)
+        #print(results)
         key = 1
         row = int(row)
         for result in results:
-            print(result)
-            print(key)
-            print(row)
+            #print(result)
+            #print(key)
+            #print(row)
             if key == row:
                 print("got in!")
                 result = str(result)
@@ -342,9 +363,65 @@ def addCurrentMovie(name,row):
                 break
             key = key + 1
         closeConnection(conn)
-        return json.dumps({"status": 200})
+        return json.dumps({"Movie Added!": 200})
     else:
-        return json.dumps({"Error":0})
+        return json.dumps({"Already in List":0})
+
+@app.route('/getList', methods = ["GET"])
+def getList():
+    conn = openConnection()
+    cur = conn.cursor()
+    sql = """SELECT m_title FROM user,movies
+    WHERE u_mid = m_mid"""
+    cur.execute(sql)
+    results = cur.fetchall()
+    #print(results)
+    data =[]
+    for result in results:
+        #print(result)
+        result = str(result)
+        result = result.strip("(").strip(")").strip(",").strip("'")
+        #print(result)
+        sql = f"""SELECT m_title, ad_ratings, da_releaseyear, du_runtime, g_gname FROM movies,adult,dates,duration,genre,movie_genre 
+        WHERE m_adid = ad_adid AND m_duid = du_duid AND m_daid = da_daid AND movie_genre.mg_mid = movies.m_mid AND
+        genre.g_gid = movie_genre.mg_gid AND m_title = "{result}";"""
+        cur.execute(sql)
+        results = cur.fetchall()
+        #print(results)
+        data += results
+        sql = f"""SELECT di_diname FROM movies,director, movie_director 
+        WHERE movie.m_mid = movie_director.md_mid AND movie_director.md_diid = director.di_diid AND m_title = "{result}";"""
+
+    #print(data)
+    closeConnection(conn)
+    return json.dumps(data)
+
+@app.route('/getList2', methods = ["GET"])
+def getList2():
+    conn = openConnection()
+    cur = conn.cursor()
+    sql = """SELECT m_title FROM user,movies
+    WHERE u_mid = m_mid"""
+    cur.execute(sql)
+    results = cur.fetchall()
+    #print(results)
+    data =[]
+    for result in results:
+        #print(result)
+        result = str(result)
+        result = result.strip("(").strip(")").strip(",").strip("'")
+        #print(result)
+        sql = f"""SELECT m_title,di_diname FROM movies,director, movie_director 
+        WHERE movies.m_mid = movie_director.md_mid AND movie_director.md_diid = director.di_diid AND m_title = "{result}";"""
+        cur.execute(sql)
+        results = cur.fetchall()
+        #print(results)
+        data += results
+        
+    #print(data)
+    closeConnection(conn)
+    return json.dumps(data)
+
 
 
 if __name__ == '__main__':
