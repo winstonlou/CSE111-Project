@@ -6,86 +6,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href= "../static/Page.css">
     <script src="../static/Page.js"></script>
-    <title>Document</title>
+    <title>Home</title>
 </head>
 <body>
-    <h>Movie Recommendations</h>
-    <button class="login" onclick="filter()">Click for list of movies</button>
+    <nav class="menu">
+        </div>
+            <ul>
+                <li><a href="Past.html">Past List</a></li>
+                <li><a href="Current.html">Current List</a></li>
+                <li><a href="Future.html">Future List</a></li>
+                <li>
+                    <select class = "dropbtn" name="dropdown" id="dropdown">
+                        <option value="None">Select:</option>
+                        <option value ="Thriller">Thriller </option>
+                        <option value = "Sci-Fi">Sci-Fi </option>
+                        <option value="Animation">Animation </option>
+                        <option value="Fantasy">Fantasy </option>
+                        <option value="Drama">Drama </option>
+                        <option value="Horror">Horror </option>
+                        <option value="Documentary">Documentary </option>
+                        <option value="Adventure">Adventure </option>
+                        <option value="Western">Western </option>
+                        <option value="Mystery">Mystery </option>
+                        <option value="Action">Action </option>
+                        <option value="War">War </option>
+                        <option value="Crime">Crime </option>
+                        <option value="Foreign">Foreign </option>
+                        <option value="Family">Family </option>
+                        <option value="Romance">Romance </option>
+                        <option value="Comedy">Comedy </option>
+                        <option value="Music">Music </option>
+                        <option value="History">History </option>
+                        <option value="TV Movie">TV Movie </option>
+                    </select>
+                </li>
+                <li>
+                    <select class = "dropbtn" name="dropdown2" id="dropdown2">
+                        <option value="None">Select:</option>
+                        <option value ="Thriller">Thriller </option>
+                        <option value = "Sci-Fi">Sci-Fi </option>
+                        <option value="Animation">Animation </option>
+                        <option value="Fantasy">Fantasy </option>
+                        <option value="Drama">Drama </option>
+                        <option value="Horror">Horror </option>
+                        <option value="Documentary">Documentary </option>
+                        <option value="Adventure">Adventure </option>
+                        <option value="Western">Western </option>
+                        <option value="Mystery">Mystery </option>
+                        <option value="Action">Action </option>
+                        <option value="War">War </option>
+                        <option value="Crime">Crime </option>
+                        <option value="Foreign">Foreign </option>
+                        <option value="Family">Family </option>
+                        <option value="Romance">Romance </option>
+                        <option value="Comedy">Comedy </option>
+                        <option value="Music">Music </option>
+                        <option value="History">History </option>
+                        <option value="TV Movie">TV Movie </option>
+                    </select>
+                </li>
+                <li>
+                    <select class = "dropbtn" name="dropdown3" id="dropdown3">
+                        <option value="None">Select:</option>
+                        <option value ="Thriller">Thriller </option>
+                        <option value = "Sci-Fi">Sci-Fi </option>
+                        <option value="Animation">Animation </option>
+                        <option value="Fantasy">Fantasy </option>
+                        <option value="Drama">Drama </option>
+                        <option value="Horror">Horror </option>
+                        <option value="Documentary">Documentary </option>
+                        <option value="Adventure">Adventure </option>
+                        <option value="Western">Western </option>
+                        <option value="Mystery">Mystery </option>
+                        <option value="Action">Action </option>
+                        <option value="War">War </option>
+                        <option value="Crime">Crime </option>
+                        <option value="Foreign">Foreign </option>
+                        <option value="Family">Family </option>
+                        <option value="Romance">Romance </option>
+                        <option value="Comedy">Comedy </option>
+                        <option value="Music">Music </option>
+                        <option value="History">History </option>
+                        <option value="TV Movie">TV Movie </option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+
+        <input id="movie-name" class = "input" type="text" placeholder="Search"/>
+        <button id = "searchbtn" onclick = "Search()" class = "button">Search</button>   
+    </nav>
     <table id = "display" class = "display">Display stuff here</table>
-    <br>
-    <p>Search by Name:</p>
-    <input id="movie-name" type="text"/>
-    <button id = "searchbtn" onclick = "Search()" class = "button">Search</button>
-    <br>
-    <p>Select Genre(s):</p>
-    <select class = "dropbtn" name="dropdown" id="dropdown">
-        <option value="None">Select:</option>
-        <option value ="Thriller">Thriller </option>
-        <option value = "Sci-Fi">Sci-Fi </option>
-        <option value="Animation">Animation </option>
-        <option value="Fantasy">Fantasy </option>
-        <option value="Drama">Drama </option>
-        <option value="Horror">Horror </option>
-        <option value="Documentary">Documentary </option>
-        <option value="Adventure">Adventure </option>
-        <option value="Western">Western </option>
-        <option value="Mystery">Mystery </option>
-        <option value="Action">Action </option>
-        <option value="War">War </option>
-        <option value="Crime">Crime </option>
-        <option value="Foreign">Foreign </option>
-        <option value="Family">Family </option>
-        <option value="Romance">Romance </option>
-        <option value="Comedy">Comedy </option>
-        <option value="Music">Music </option>
-        <option value="History">History </option>
-        <option value="TV Movie">TV Movie </option>
-    </select>
-    <select class = "dropbtn" name="dropdown2" id="dropdown2">
-        <option value="None">Select:</option>
-        <option value ="Thriller">Thriller </option>
-        <option value = "Sci-Fi">Sci-Fi </option>
-        <option value="Animation">Animation </option>
-        <option value="Fantasy">Fantasy </option>
-        <option value="Drama">Drama </option>
-        <option value="Horror">Horror </option>
-        <option value="Documentary">Documentary </option>
-        <option value="Adventure">Adventure </option>
-        <option value="Western">Western </option>
-        <option value="Mystery">Mystery </option>
-        <option value="Action">Action </option>
-        <option value="War">War </option>
-        <option value="Crime">Crime </option>
-        <option value="Foreign">Foreign </option>
-        <option value="Family">Family </option>
-        <option value="Romance">Romance </option>
-        <option value="Comedy">Comedy </option>
-        <option value="Music">Music </option>
-        <option value="History">History </option>
-        <option value="TV Movie">TV Movie </option>
-    </select>
-    <select class = "dropbtn" name="dropdown3" id="dropdown3">
-        <option value="None">Select:</option>
-        <option value ="Thriller">Thriller </option>
-        <option value = "Sci-Fi">Sci-Fi </option>
-        <option value="Animation">Animation </option>
-        <option value="Fantasy">Fantasy </option>
-        <option value="Drama">Drama </option>
-        <option value="Horror">Horror </option>
-        <option value="Documentary">Documentary </option>
-        <option value="Adventure">Adventure </option>
-        <option value="Western">Western </option>
-        <option value="Mystery">Mystery </option>
-        <option value="Action">Action </option>
-        <option value="War">War </option>
-        <option value="Crime">Crime </option>
-        <option value="Foreign">Foreign </option>
-        <option value="Family">Family </option>
-        <option value="Romance">Romance </option>
-        <option value="Comedy">Comedy </option>
-        <option value="Music">Music </option>
-        <option value="History">History </option>
-        <option value="TV Movie">TV Movie </option>
-    </select>
+
+
 </body>
 </html>

@@ -83,7 +83,36 @@ def displaySearch(results):
     print(finals)
     closeConnection(conn)
     return finals
-
+def CheckList(name,row):
+    print("Checking User List First")
+    conn = openConnection()
+    cur = conn.cursor()
+    sql = f"""SELECT m_mid FROM movies WHERE m_title LIKE '%{name}%';"""
+    cur.execute(sql)
+    results = cur.fetchall()
+    print(results)
+    key = 1
+    row = int(row)
+    for result in results:
+        print(result)
+        print(key)
+        print(row)
+        if key == row:
+            print("got in!")
+            result = str(result)
+            result = result.strip("(").strip(")").strip(",").strip("'")
+            print(result)
+            cur.execute(f"""SELECT u_id FROM user WHERE u_mid ={result}""")
+            check = cur.fetchall()
+            print(check)
+            if check:
+                return 1
+            if not check:
+                return 0
+            break
+        key = key + 1
+    closeConnection(conn)
+    return 2
 
 
 @app.route('/')
@@ -104,7 +133,7 @@ def getMovieList():
     return json.dumps(results)
 
 @app.route('/nameSearch/<string:name>', methods = ["GET"])
-def getGenre(name):
+def getName(name):
     conn = openConnection()
     cur = conn.cursor()
     sql = f"""SELECT m_title, ad_ratings, da_releaseyear, du_runtime, g_gname FROM movies,adult,dates,duration,genre,movie_genre 
@@ -161,7 +190,7 @@ def Genre1(genre):
         genre.g_gid = movie_genre.mg_gid AND m_title = "{result}";"""
         cur.execute(sql)
         results = cur.fetchall()
-        print(results)
+        #print(results)
         data += results
     #print(data)
     closeConnection(conn)
@@ -178,23 +207,52 @@ def getNameAndGenre2(name,genre,genre2):
         WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND m_title LIKE '%{name}%' AND g_gname = '{genre2}'
         """)
     results = cur.fetchall()
-    print(results)
+    #print(results)
     data =[]
     for result in results:
-        print(result)
+        #print(result)
         result = str(result)
         result = result.strip("(").strip(")").strip(",").strip("'")
-        print(result)
+        #print(result)
         sql = f"""SELECT m_title, ad_ratings, da_releaseyear, du_runtime, g_gname FROM movies,adult,dates,duration,genre,movie_genre 
         WHERE m_adid = ad_adid AND m_duid = du_duid AND m_daid = da_daid AND movie_genre.mg_mid = movies.m_mid AND
         genre.g_gid = movie_genre.mg_gid AND m_title = '{result}';"""
         cur.execute(sql)
         results = cur.fetchall()
-        print(results)
+        #print(results)
         data += results
-    print(data)
+    #print(data)
     closeConnection(conn)
     return json.dumps(data)
+
+@app.route('/G2/<string:genre>/<string:genre2>', methods = ["GET"])
+def Genre2(genre,genre2):
+    conn = openConnection()
+    cur = conn.cursor()
+    cur.execute("""SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?""", [genre, genre2])
+    results = cur.fetchall()
+    #print(results)
+    data =[]
+    for result in results:
+        #print(result)
+        result = str(result)
+        result = result.strip("(").strip(")").strip(",").strip("'").strip('"')
+        #print(result)
+        sql = f"""SELECT m_title, ad_ratings, da_releaseyear, du_runtime, g_gname FROM movies,adult,dates,duration,genre,movie_genre 
+        WHERE m_adid = ad_adid AND m_duid = du_duid AND m_daid = da_daid AND movie_genre.mg_mid = movies.m_mid AND
+        genre.g_gid = movie_genre.mg_gid AND m_title = "{result}";"""
+        cur.execute(sql)
+        results = cur.fetchall()
+        print(results)
+        data += results
+    #print(data)
+    closeConnection(conn)
+    return json.dumps(data)
+
 
 @app.route('/NaG3/<string:name>/<string:genre>/<string:genre2>/<string:genre3>', methods = ["GET"])
 def getNameAndGenre3(name,genre,genre2,genre3):
@@ -209,7 +267,7 @@ def getNameAndGenre3(name,genre,genre2,genre3):
         SELECT m_title FROM movies, movie_genre, genre
         WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND m_title LIKE '%{name}%' AND g_gname = '{genre3}'""")
     results = cur.fetchall()
-    print(results)
+    #print(results)
     data =[]
     for result in results:
         print(result)
@@ -223,9 +281,70 @@ def getNameAndGenre3(name,genre,genre2,genre3):
         results = cur.fetchall()
         print(results)
         data += results
-    print(data)
+    #print(data)
     closeConnection(conn)
     return json.dumps(data)
+
+@app.route('/G3/<string:genre>/<string:genre2>/<string:genre3>', methods = ["GET"])
+def Genre3(genre,genre2,genre3):
+    conn = openConnection()
+    cur = conn.cursor()
+    cur.execute("""SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?
+        INTERSECT
+        SELECT m_title FROM movies, movie_genre, genre
+        WHERE movies.m_mid = movie_genre.mg_mid AND genre.g_gid = movie_genre.mg_gid AND g_gname = ?""", [genre, genre2, genre3])
+    results = cur.fetchall()
+    #print(results)
+    data =[]
+    for result in results:
+        #print(result)
+        result = str(result)
+        result = result.strip("(").strip(")").strip(",").strip("'").strip('"')
+        #print(result)
+        sql = f"""SELECT m_title, ad_ratings, da_releaseyear, du_runtime, g_gname FROM movies,adult,dates,duration,genre,movie_genre 
+        WHERE m_adid = ad_adid AND m_duid = du_duid AND m_daid = da_daid AND movie_genre.mg_mid = movies.m_mid AND
+        genre.g_gid = movie_genre.mg_gid AND m_title = "{result}";"""
+        cur.execute(sql)
+        results = cur.fetchall()
+        #print(results)
+        data += results
+    #print(data)
+    closeConnection(conn)
+    return json.dumps(data)
+
+@app.route('/addCurrentMovie/<string:name>/<row>', methods = ["POST"])
+def addCurrentMovie(name,row):
+    print("before check")
+    checker = CheckList(name,row)
+    if checker == 0:
+        conn = openConnection()
+        cur = conn.cursor()
+        sql = f"""SELECT m_mid FROM movies WHERE m_title LIKE '%{name}%';"""
+        cur.execute(sql)
+        results = cur.fetchall()
+        print(results)
+        key = 1
+        row = int(row)
+        for result in results:
+            print(result)
+            print(key)
+            print(row)
+            if key == row:
+                print("got in!")
+                result = str(result)
+                result = result.strip("(").strip(")").strip(",").strip("'")
+                cur.execute("""INSERT INTO user(u_mid,u_watching,u_watched,u_towatch) VALUES(?,0,1,0)""",[result])
+                conn.execute("COMMIT")
+                break
+            key = key + 1
+        closeConnection(conn)
+        return json.dumps({"status": 200})
+    else:
+        return json.dumps({"Error":0})
 
 
 if __name__ == '__main__':

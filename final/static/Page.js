@@ -39,12 +39,16 @@ function Search(){
     Genre1(genre1)
   } else if(name =="" && genre1 == "None" && genre2 != "None" && genre3 != "None"){
     console.log("2 Genre, Genre 3 and 2")
+    Genre2(genre2,genre3)
   } else if(name =="" && genre1 != "None" && genre2 != "None" && genre3 == "None"){
     console.log("2 Genre, Genre 1 and 2")
+    Genre2(genre1,genre2)
   } else if(name =="" && genre1 != "None" && genre2 == "None" && genre3 != "None"){
     console.log("2 Genre, Genre 1 and 3")
+    Genre2(genre2,genre3)
   } else if(name =="" && genre1 != "None" && genre2 != "None" && genre3 != "None"){
     console.log("3 Genre")
+    Genre3(genre1,genre2, genre3)
   } else if (name !="" && genre1 == "None" && genre2 == "None" && genre3 == "None"){
     console.log("Name only")
     nameSearch()
@@ -79,7 +83,7 @@ function DisplayData(data){
     display.removeChild(display.firstChild);
   }
   var entry = ""
-  entry += "<tr>"
+  entry += '<tr>'
   entry += "<th>Movie Name</th>"
   entry += "<th>Adult(18+)</th>"
   entry += "<th>Release Year</th>"
@@ -139,7 +143,7 @@ function DisplayData(data){
     entry +="<th>"+ small[2] + "<th>"
     entry +="<th>"+ small[3] + "<th>"
     entry +="<th>"+ small[4] + "<th>"
-    entry += "<th>" + "<button onclick=addMovie()>Add Movie</button>" + "</th>"
+    entry += "<th>" + "<button onclick=addMovie(this)>Add Movie</button>" + "</th>"
     entry += "</tr>"
   }
   document.getElementById("display").innerHTML = entry;
@@ -215,6 +219,23 @@ async function nameAndGenre2(genre,genre2){
     xhttp.send(name,genre,genre2);
 }
 
+async function Genre2(genre,genre2){
+  console.log("2 Genre Search")
+  const xhttp = new XMLHttpRequest();
+    xhttp.open('GET', url + "G2/"+ genre +"/" + genre2, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onload = function(){
+
+      data = JSON.parse(this.responseText)
+      console.log(data)
+      DisplayData(data)
+     
+    };
+    
+    xhttp.send(genre,genre2);
+}
+
+
 async function nameAndGenre3(genre,genre2,genre3){
   var name = document.getElementById("movie-name").value
 
@@ -231,4 +252,37 @@ async function nameAndGenre3(genre,genre2,genre3){
     };
     
     xhttp.send(name,genre,genre2,genre3);
+}
+
+async function Genre3(genre,genre2, genre3){
+  console.log("3 Genre Search")
+  const xhttp = new XMLHttpRequest();
+    xhttp.open('GET', url + "G3/"+ genre +"/" + genre2 + "/" + genre3, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onload = function(){
+
+      data = JSON.parse(this.responseText)
+      console.log(data)
+      DisplayData(data)
+     
+    };
+    
+    xhttp.send(genre,genre2,genre3);
+}
+
+async function addMovie(element){
+  var name = document.getElementById("movie-name").value
+  var num = element.parentNode.parentNode.rowIndex
+  console.log("addMovie with" + name + " and row #" + num)
+  const xhttp = new XMLHttpRequest();
+    xhttp.open('POST', url + "addCurrentMovie/"+ name + "/" + num, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onload = function(){
+
+      data = JSON.parse(this.responseText)
+      console.log(data)
+     
+    };
+    
+    xhttp.send(name,num);
 }
